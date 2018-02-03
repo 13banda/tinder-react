@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components'
 import {elementById, takeToHome} from './module'
 
-
 const Pannel =styled.div`
   width: 100%;
   height: 100%;
@@ -32,6 +31,26 @@ const H3 = styled.div`
       text-align: center;
       margin-top: 50px;
       margin-bottom: 30px;
+`;
+const Textarea = styled.textarea`
+  width: 300px;;
+  padding: 0.8em;
+  border: 1px solid #eaeaea;
+  background-color: #efefef;
+  cursor: text;
+  box-sizing: border-box;
+  border-radius: 5px;
+  color: #555;
+  font-weight: 700;
+  line-height: 1.2em;
+  font-size: initial;
+  display: block;
+  margin: 20px;
+  &:focus{
+    background: white;
+    outline: 0;
+    border: 2px solid #465867;
+  }
 `;
 const Input = styled.input`
   width: 300px;;
@@ -73,17 +92,19 @@ export class Acreacte extends React.Component{
           const name = elementById('name').value;
           const email = elementById('email').value;
           const gender = elementById('gender').value;
+          const age = elementById('age').value;
+          const about = elementById('about').value;
+          const city = elementById('city').value;
           const file = elementById('photo')
           const btnContinue = elementById('continue');
           btnContinue.innerHTML = 'Sending ...'
           //validating input here and upload to server
-           uploadUserDetail(name,email,gender,file);
+           uploadUserDetail(name,email,gender,file,age,about,city);
          //if response is treu the put user to home  call taketohome mnthod
           setTimeout(50);// waiting to uploading...here
 
   }
-            //  <input type="file" style={{display:"none"}} id="inputfile"/>}
-
+  //  <input type="file" style={{display:"none"}} id="inputfile"/>}
   render(){
     return (
       <Pannel>
@@ -98,6 +119,10 @@ export class Acreacte extends React.Component{
             <Input id="name" placeholder="First Name" type="text" />
             <Input id="email" placeholder="Email" type="email" />
             <Input id="gender" placeholder="Gender" type="text" />
+            <Input id="age" placeholder="Age" type="text" />
+            <Input id="city" placeholder="city" type="text" />
+            <Textarea id="about" rows="4" cols="50" placeholder="about me" wrap="hard">
+              </Textarea>
             <Input id="photo"  type="file" />
             <BtnContinue id="continue"
              onClick={this.handleAc}
@@ -110,7 +135,7 @@ export class Acreacte extends React.Component{
 }
 
 
-function uploadUserDetail(name,email,gender,file)
+function uploadUserDetail(name,email,gender,file,age,about,city)
 {
   // some AJAX api and using other to upload file
   // there is some AJAX call to put data to server
@@ -140,7 +165,7 @@ function uploadUserDetail(name,email,gender,file)
   	console.log(result);
     // when Sucess fully return true
     userDetails = result;
-    insertUser(result,name,email,gender)
+    insertUser(result,name,email,gender,age,about,city)
   })
   .catch(function(error) {
   	console.log('Request Failed:' + error);
@@ -149,11 +174,9 @@ function uploadUserDetail(name,email,gender,file)
 
   // now we hav profile id put it on user details user table.ok
 
-
-
 }
 
-function insertUser(userDetails,name,email,gender){
+function insertUser(userDetails,name,email,gender,age,about,city){
 
   // normal user can not insert but foor now we can add admoin auth.
   var url = "https://data.embroidery86.hasura-app.io/v1/query";
@@ -172,14 +195,17 @@ function insertUser(userDetails,name,email,gender){
   var body = {
       "type": "insert",
       "args": {
-          "table": "user",
+          "table": "userinfo",
           "objects": [
               {
                   "hasura_id": userDetails.user_id,
                   "name": name,
                   "email": email,
                   "gender": gender,
-                  "profile_file_id": userDetails.file_id
+                  "profile_file_id": userDetails.file_id,
+                  "age":age,
+                  "about_me": about,
+                  "city": city
               }
           ]
       }

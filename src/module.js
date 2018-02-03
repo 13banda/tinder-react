@@ -19,7 +19,7 @@ const Input = styled.input`
   font-size: initial;
   display: block;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-top: 15px;
   padding-bottom: 4px;
   width: 63%;
   &:focus{
@@ -37,6 +37,9 @@ const Button = styled.button`
     color: white;
     background: #fe5068;
     font-weight: bold;
+    &:focus {
+    outline: 0;
+    }
 `;
 
 const TinderLogo = styled.div`
@@ -56,7 +59,7 @@ const P = styled.p`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-   margin-top: 15px;
+   margin-top: 18px;
 `;
 // get the element by Id ..
 export function elementById(id){
@@ -88,7 +91,7 @@ export function takeToHome(result){
   var body = {
       "type": "select",
       "args": {
-          "table": "user",
+          "table": "userinfo",
           "columns": [
               "*"
           ],
@@ -265,7 +268,7 @@ export class Login extends React.Component{
         <TinderLogo>
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><defs><radialGradient id="a" cy="100%" r="106.833%" fx="50%" fy="100%"><stop offset="0%" stop-color="#FF7854"/><stop offset="100%" stop-color="#FD267D"/></radialGradient></defs><path fill="url(#a)" fill-rule="evenodd" d="M155.908 897.721a.097.097 0 0 1-.108-.03c-1.194-1.581-1.494-4.299-1.567-5.343-.015-.201-.241-.314-.422-.213-3.687 2.071-7.108 6.97-7.108 11.7 0 8.126 5.644 14.943 15.36 14.943 9.103 0 15.36-7.026 15.36-14.942 0-10.358-7.402-17.24-13.995-20.351a.237.237 0 0 0-.336.246c.849 5.582-.324 11.653-7.184 13.99z" transform="translate(-146 -883)"/></svg>
         </TinderLogo>
-        <P>GET STARTED</P>
+        <P>Welcome</P>
         <Input id="username" placeholder="username" type="text" />
         <Input id="password" placeholder="password" type="password" />
         <ButtonContainer >

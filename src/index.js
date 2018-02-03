@@ -5,6 +5,7 @@ import './global-styles';
 import {Login, takeToHome} from "./module"
 import {Drover} from './home'
 
+
 const Banner = styled.div`
 height: 500px;
 background-color: #fff;

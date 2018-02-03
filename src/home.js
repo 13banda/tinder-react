@@ -5,6 +5,7 @@ import styled from 'styled-components';
 //import Icon_1 from './../tinder images/edit.svg'
 import ReactDOM from 'react-dom';
 import {Login} from "./module"
+import {Edit} from "./edit-profile"
 import {suggestU, Suggest} from "./suggestion"
 
 const Icon_1 = "https://filestore.embroidery86.hasura-app.io/v1/file/7c341a80-9705-45c7-8d6a-65a0518fc37c";
@@ -66,13 +67,12 @@ const Pannel_1 = styled.div`
   display: block;
 `;
 
-const IconCon = styled.div`
-  height: 35px;
-  width: 35px;
-  padding: 7px;
-  border-radius: 50%;
-  border: 1px solid #0000004d;
-  color: red;
+    const IconCon = styled.div`
+    height: 28px;
+    width: 28px;
+    padding: 5px 10px 8px 5px;
+    border-radius: 100%;
+    border: 1px solid #0000004d;
 `;
 
 const Button = styled.button`
@@ -121,7 +121,7 @@ const Button = styled.button`
 
   const Ava = styled.img`
    width: 45px;
-   height: 40px;
+   height: 44px;
    border-radius: 100%;
   `;
 
@@ -132,8 +132,7 @@ class Item extends React.Component {
       this.handleItmes = this.handleItmes.bind(this);
      }
      handleItmes(){
-
-       ReactDOM.render(<Suggest H_id={this.props.id} name={this.props.name} id={this.props.pic} />,document.getElementById('desktop'))
+       ReactDOM.render(<Suggest current={this.props.c} all={this.props.a} H_id={this.props.id} name={this.props.name} id={this.props.pic} />,document.getElementById('desktop'))
      }
       render(){
         let picUrl  = "https://filestore.embroidery86.hasura-app.io/v1/file/"+this.props.pic;
@@ -154,19 +153,22 @@ class LogoutPage extends React.Component{
    this.handleDone = this.handleDone.bind(this);
    this.handleDeleteAC = this.handleDeleteAC.bind(this);
  }
-// handle some event here
+ // handle some event here
   handleDone(){
-   const btnInput = document.getElementById('Country').value;
+   const btnInput = document.getElementById('City').value;
    const InputLook = document.getElementById('look').value;
     if(btnInput !== "" & InputLook!==""){
       // make some AJAX call to set location
-         ReactDOM.render(<EditProfile userInfo={this.props.userInfo}/>,document.getElementById('desktop'))
+         ReactDOM.render(<EditProfile current={this.props.current} sugest={this.props.sugest} userInfo={this.props.userInfo}/>,document.getElementById('desktop'))
     }
     else{
       if(btnInput !== "")
-      alert('please input  a valid country name');
+      alert('please input  a valid City name');
       if(InputLook!=="")
       alert('please input  what you are looking for');
+      else{
+        alert("please input something here.")
+      }
     }
   }
   handleLogout(){
@@ -180,15 +182,14 @@ class LogoutPage extends React.Component{
     BtnDelete.innerHTML = "deleting..."
     deleteAccount(this.props.userInfo);
   }
-
   render(){
     return (
       <CenterPannel>
         <Pannel_1>
           <div style={{display:"flex",justifyContent:"center"}}>
             <div>
-              <P> Country</P>
-              <Input id='Country' placeholder="India" type="text" ></Input>
+              <P>City</P>
+              <Input id='City' placeholder="Enter City Name" type="text" ></Input>
               <P> Looking for</P>
               <Input id='look' placeholder="male/female" type="text" ></Input>
             </div>
@@ -203,20 +204,25 @@ class LogoutPage extends React.Component{
     );
   }
 }
-class EditProfile extends React.Component{
+
+export class EditProfile extends React.Component{
   constructor(props) {
    super(props);
    this.handleSetting = this.handleSetting.bind(this);
    this.handletoS = this.handletoS.bind(this);
+   this.handleEdit = this.handleEdit.bind(this);
  }
   // handle the setting putton
+  handleEdit(){
+    //hadle onClick
+    ReactDOM.render(<Edit current={this.props.current} sugest={this.props.sugest} userInfo={this.props.userInfo} email={this.props.userInfo.email} H_id={this.props.userInfo.hasura_id} name={this.props.userInfo.name} id={this.props.userInfo.profile_file_id} />,document.getElementById('desktop'))
+  }
    handleSetting(){
-
-     ReactDOM.render(<LogoutPage userInfo={this.props.userInfo} />,document.getElementById('desktop'))
+     ReactDOM.render(<LogoutPage current={this.props.current} sugest={this.props.sugest} userInfo={this.props.userInfo} />,document.getElementById('desktop'))
    }
   handletoS(){
-
-    ReactDOM.render(<Suggest Hid={this.props.suggest[0].hasura_id} name={this.props.sugest[0].name} id={this.props.sugest[0].profile_file_id} />,document.getElementById('desktop'))
+   let i = this.props.current;
+    ReactDOM.render(<Suggest current={this.props.current} all={this.props.sugest} H_id={this.props.sugest[i].hasura_id} name={this.props.sugest[i].name} id={this.props.sugest[i].profile_file_id} />,document.getElementById('desktop'))
   }
   render(){
     let userDetails = this.props.userInfo;
@@ -224,10 +230,10 @@ class EditProfile extends React.Component{
     let username = userDetails.name;
     let gender= userDetails.gender;
     let email = userDetails.email;
-
+   let age = userDetails.age;
     return(
       <CenterPannel>
-        <Pannel_1>
+        <Pannel_1 id="edit">
           <div style={{display:"grid", gridTemplateColumns:"1fr 1fr"}}>
             <div style={{display:"flex",justifyContent:"flex-end",marginRight: -10}}>
               <img style={{borderRadius: "100%", border:" 2px solid #fff",width: "50px",height:" 40px", marginTop: 12}} src={url} />
@@ -237,13 +243,15 @@ class EditProfile extends React.Component{
             </div>
           </div>
           <img style={{border:"1px solid #0000004d", height: "56%",width:260, margin:"20 45 10 45", borderRadius:"7px"}} src={url} />
-          <p style={{textAlign: "center" ,marginTop: 10,fontSize:20}}> {username} </p>
-          <div style={{display: 'flex', marginTop: 10}}>
+          <p style={{textAlign: "center" ,fontSize:20}}> {username+", "+age} </p>
+          <div style={{display: 'flex'}}>
             <IconCon style={{marginLeft: 15, fontSize:'14px' }} >
-              <img style={{borderRadius: "100%", border:" 2px solid #fff",height:" 30px"}} onClick={this.handleSetting} src={Icon} />
+              <img style={{borderRadius: "100%", border:" 2px solid #fff",height:" 28px"}} onClick={this.handleSetting} src={Icon} />
+                <p style={{fontSize:"1.2em", margin:"5px 0px 0px -10px", color: "#00000080"}}>Settings</p>
             </IconCon>
             <IconCon style={{marginLeft: 220 }}>
-              <img style={{borderRadius: "100%", border:" 2px solid #fff",height:" 25px"}} src={Icon_1} />
+              <img onClick={this.handleEdit} style={{borderRadius: "100%", border:" 2px solid #fff",height:" 28px"}} src={Icon_1} />
+                <p style={{fontSize:"1.2em", margin:"5px 0px 0px -10px", color:" #00000080"}}>EditInfo</p>
             </IconCon>
           </div>
         </Pannel_1>
@@ -258,15 +266,16 @@ export class Drover extends React.Component{
    this.handleEditProfile = this.handleEditProfile.bind(this);
  }
   handleEditProfile(){
-   ReactDOM.render(<EditProfile userInfo={this.props.logedUser} sugest={this.props.userInfo}/>,document.getElementById('desktop'))
+   ReactDOM.render(<EditProfile current={0} userInfo={this.props.logedUser} sugest={this.props.userInfo}/>,document.getElementById('desktop'))
    }
 
   render(){
       let userDetails = this.props.logedUser;;
       const currentUser_id =this.props.id;
       const allUser = this.props.userInfo;
+      const length = this.props.userInfo.length;
 // put it in home ake to home       allUser.map( s =>{if(s.hasura_id===currentUser_id){ userDetails = s;} });
-      const listItems = allUser.map(allUsers => allUsers.hasura_id!==currentUser_id && <Item id={allUsers.hasura_id} name={allUsers.name} pic={allUsers.profile_file_id} />);
+      const listItems = allUser.map((allUsers,i) => allUsers.hasura_id!==currentUser_id && <Item c={i} a={allUser} id={allUsers.hasura_id} name={allUsers.name} pic={allUsers.profile_file_id} />);
 
       // make some AJAX call and get the user info
       // get use id by auth token first  here i facing some prob so i not using function here
@@ -279,10 +288,7 @@ export class Drover extends React.Component{
       let username = userDetails.name;
       let gender= userDetails.gender;
       let email = userDetails.email;
-
-
        //   load All User And put it it on match like here
-
     return (
       <div style={{display:"flex"}}>
         <Pannel>
@@ -297,7 +303,7 @@ export class Drover extends React.Component{
           </Matches>
         </Pannel>
         <Desktop id="desktop">
-          <Suggest H_id={allUser[0].hasura_id} name={allUser[0].name} id={allUser[0].profile_file_id} />
+          <Suggest current={0} all={this.props.userInfo}  H_id={allUser[0].hasura_id} name={allUser[0].name} id={allUser[0].profile_file_id} />
         </Desktop>
       </div>
     );
@@ -422,7 +428,7 @@ function getUserInfo(user_id){
   var body = {
       "type": "select",
       "args": {
-          "table": "user",
+          "table": "userinfo",
           "columns": [
               "*"
           ],
@@ -452,9 +458,7 @@ function getUserInfo(user_id){
   });
 }
 function deleteUserDetails(userDetails){
-
   var url = "https://data.embroidery86.hasura-app.io/v1/query";
-
   var requestOptions = {
       "method": "POST",
       "headers": {
@@ -462,11 +466,10 @@ function deleteUserDetails(userDetails){
           "Authorization": "Bearer 63bcb0e4a6a53ea0682e06f81f601ea855ab52abaa644551"
       }
   };
-
-  var body = {
+var body = {
       "type": "delete",
       "args": {
-          "table": "user",
+          "table": "userinfo",
           "where": {
               "hasura_id": {
                   "$eq": userDetails.hasura_id
@@ -474,9 +477,7 @@ function deleteUserDetails(userDetails){
           }
       }
   };
-
   requestOptions.body = JSON.stringify(body);
-
   fetch(url, requestOptions)
   .then(function(response) {
   	return response.json();
